@@ -12,9 +12,8 @@ export const metadata: Metadata = {
 const SignUp: React.FC = () => {
   return (
     <>
-      <Breadcrumb pageName="Sign Up" />
 
-      <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
+      <div className="rounded-2xl border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
         <div className="flex flex-wrap items-center">
           <div className="hidden w-full xl:block xl:w-1/2">
             <div className="py-17.5 px-26 text-center">
@@ -35,8 +34,7 @@ const SignUp: React.FC = () => {
                 />
               </Link>
               <p className="2xl:px-20">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit
-                suspendisse.
+                Data at your fingertips!
               </p>
 
               <span className="mt-15 inline-block">
