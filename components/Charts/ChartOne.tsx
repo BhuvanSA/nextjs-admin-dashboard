@@ -1,10 +1,17 @@
 "use client";
 import { ApexOptions } from "apexcharts";
-import React, { useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 const ReactApexChart = dynamic(() => import("react-apexcharts"), {
   ssr: false,
 });
+
+interface ChartDataStatsProps {
+  oneDataName: string,
+  twoDataName: string,
+  graphDataOne: [number, number, number],
+  graphDataTwo: [number, number, number],
+}
 
 const options: ApexOptions = {
   legend: {
@@ -123,20 +130,36 @@ interface ChartOneState {
   }[];
 }
 
-const ChartOne: React.FC = () => {
+const ChartOne: React.FC<ChartDataStatsProps> = (props) => {
   const [state, setState] = useState<ChartOneState>({
     series: [
       {
-        name: "Product One",
-        data: [7.2, 7.4, 7.6]
+        name: props['oneDataName'],
+        data: props['graphDataOne']
       },
 
       {
-        name: "Product Two",
-        data: [8.3, 9.2, 8.2]
+        name: props['twoDataName'],
+        data: props['graphDataTwo']
       },
     ],
   });
+  useEffect(() => {
+    // Update state.series when props['top50'] changes
+    setState({ series: [
+      {
+        name: props['oneDataName'],
+        data: props['graphDataOne'],
+      },
+      {
+        name: props['twoDataName'],
+        data: props['graphDataTwo'],
+      }
+    ] });
+  }, [props]);
+
+  // console.log(state.series[1].data)
+  // console.log(state.series[1].data)
 
   const handleReset = () => {
     setState((prevState) => ({
@@ -152,7 +175,7 @@ const ChartOne: React.FC = () => {
   if (!isWindowAvailable()) return <></>;
 
   return (
-    <div className="col-span-12 rounded-2xl border border-stroke bg-white px-5 pt-7.5 pb-5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:col-span-8">
+    <div className="col-span-12 rounded-2xl border border-stroke bg-white px-5 pt-7.5 pb-5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:col-span-8 my-5">
       <div className="flex flex-wrap items-start justify-between gap-3 sm:flex-nowrap">
         <div className="flex w-full flex-wrap gap-3 sm:gap-5">
           <div className="flex min-w-47.5">
@@ -160,7 +183,7 @@ const ChartOne: React.FC = () => {
               <span className="block h-2.5 w-full max-w-2.5 rounded-full bg-primary"></span>
             </span>
             <div className="w-full">
-              <p className="font-semibold text-primary">College SGPA</p>
+              <p className="font-semibold text-primary">{props['oneDataName']}</p>
               <p className="text-sm font-medium">1 - 3 Sem</p>
             </div>
           </div>
@@ -169,7 +192,7 @@ const ChartOne: React.FC = () => {
               <span className="block h-2.5 w-full max-w-2.5 rounded-full bg-secondary"></span>
             </span>
             <div className="w-full">
-              <p className="font-semibold text-secondary">Department SGPA</p>
+              <p className="font-semibold text-secondary">{props['twoDataName']}</p>
               <p className="text-sm font-medium">1 - 3 Sem</p>
             </div>
           </div>
@@ -178,6 +201,12 @@ const ChartOne: React.FC = () => {
           <div className="inline-flex items-center rounded-md bg-whiter p-1.5 dark:bg-meta-4">
             <button className="rounded bg-white py-1 px-3 text-xs font-medium text-black shadow-card hover:bg-white hover:shadow-card dark:bg-boxdark dark:text-white dark:hover:bg-boxdark">
               Sem
+            </button>
+            <button className="rounded py-1 px-3 text-xs font-medium text-black hover:bg-white hover:shadow-card dark:text-white dark:hover:bg-boxdark">
+              Week
+            </button>
+            <button className="rounded py-1 px-3 text-xs font-medium text-black hover:bg-white hover:shadow-card dark:text-white dark:hover:bg-boxdark">
+              Month
             </button>
           </div>
         </div>

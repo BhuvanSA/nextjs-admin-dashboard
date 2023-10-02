@@ -2,24 +2,47 @@
 import React, { useEffect, useState } from "react";
 import CardDataStats from "@/components/CardDataStats";
 import Link from "next/link";
+import Image from "next/image";
 
 const Page = () => {
   const [students, setStudents] = useState([]);
+  const [dept, setDept] = useState("AI");
 
   useEffect(() => {
     // Fetch data from Flask backend when the component mounts
-    fetch("http://127.0.0.1:5000/get_students")
+    fetch(`http://127.0.0.1:5000/get_students/${dept}`)
       .then((response) => response.json())
       .then((data) => {
+        console.log(data);
         setStudents(data); // Assuming the data is an array of student objects
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
-  }, []);
+  }, [dept]);
+
+  const handleDeptClick = (e) => {
+    const value = e.target.value;
+    setDept(value);
+  };
 
   return (
     <div className="max-h-screen overflow-y-scroll">
+      <div className="my-3">
+        <ul className="flex flex-row">
+          {["AI", "AD", "CS", "EC", "IS", "EE", "ME", "AE", "CV"].map((d) => (
+            <li key={d}>
+              <button
+                className=" bg-primary hover:bg-blue-700 text-white font-bold py-2 px-4 mx-2 rounded-2xl"
+                value={d}
+                onClick={handleDeptClick}
+              >
+                {d}
+              </button>
+            </li>
+          ))}
+        </ul>
+      </div>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5">
         {students.map((student) => (
           <Link href={`students/info/${student.username}`} key={student.id}>
@@ -28,20 +51,12 @@ const Page = () => {
               title={student.username} // Assuming 'username' is the student's username
               rate={student.rate} // Assuming 'rate' is the student's rate
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className="w-6 h-6"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"
-                />
-              </svg>
+              <Image
+                alt="image of student"
+                src={`/images/students/${student.department}/${student.username}.jpg`}
+                width={30}
+                height={30}
+              />
             </CardDataStats>
           </Link>
         ))}

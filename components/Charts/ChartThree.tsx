@@ -1,6 +1,6 @@
 "use client";
 import { ApexOptions } from "apexcharts";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 const ReactApexChart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
@@ -12,8 +12,8 @@ const options: ApexOptions = {
   chart: {
     type: "donut",
   },
-  colors: ["#10B981", "#375E83", "#259AE6", "#FFA70B","#FF6B6B","#2A9D8F"],
-  labels: ["AI & ML", "AI & DS", "CS", "IS", "EC", "EE"],
+  colors: ["#10B981", "#375E83", "#259AE6", "#FFA70B","#FF6B6B","#2A9D8F","#000"],
+  labels: ["AD", "AE", "AI", "CS", "EC", "EE", "IS"],
   legend: {
     show: true,
     position: "bottom",
@@ -50,13 +50,19 @@ const options: ApexOptions = {
   ],
 };
 
-const ChartThree: React.FC = () => {
+const ChartThree: React.FC = (props) => {
+  const data = Array.isArray(props['top50']) ? props['top50']: [];
   const [state, setState] = useState<ChartThreeState>({
-    series: [65, 34, 12, 56, 32, 12],
+    series: data,
   });
+  useEffect(() => {
+    // Update state.series when props['top50'] changes
+    setState({ series: data });
+  }, [props['top50']]);
+
 
   return (
-    <div className="col-span-12 rounded-sm border border-stroke bg-white px-5 pt-7.5 pb-5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:col-span-5">
+    <div className="col-span-12 rounded-2xl border border-stroke bg-white px-5 pt-7.5 pb-5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:col-span-5">
       <div className="mb-3 justify-between gap-4 sm:flex">
         <div>
           <h5 className="text-xl font-semibold text-black dark:text-white">

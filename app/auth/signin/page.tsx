@@ -1,16 +1,40 @@
-import React from "react";
+"use client"
+import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
-import { Metadata } from "next";
-export const metadata: Metadata = {
-  title: "Signin Page | Next.js E-commerce Dashboard Template",
-  description: "This is Signin page for TailAdmin Next.js",
-  // other metadata
-};
+import { useRouter } from "next/navigation";
 
 const SignIn: React.FC = () => {
+  const router = useRouter();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [message, setMessage] = useState("");
+
+  const handleSubmit = (e:any) =>  {
+    e.preventDefault();
+    let params = new URLSearchParams();
+    params.append('email', email);
+    params.append('password', password);
+    fetch(`http://127.0.0.1:5000/signin`, {
+      method:'POST',
+      body: params,
+      headers: {
+        'Content-Type':'application/x-www-form-urlencoded'
+      }
+    })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data === "Welcome back")
+            router.push("/")
+          else {
+            setMessage(data);
+          }
+        });
+  }
+
   return (
+
     <>
       {/* <Breadcrumb pageName="Sign In" /> */}
 
@@ -170,7 +194,7 @@ const SignIn: React.FC = () => {
                 Sign In to TailAdmin
               </h2>
 
-              <form>
+              <form onSubmit={handleSubmit}>
                 <div className="mb-4">
                   <label className="mb-2.5 block font-medium text-black dark:text-white">
                     Email
@@ -180,6 +204,8 @@ const SignIn: React.FC = () => {
                       type="email"
                       placeholder="Enter your email"
                       className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                      value={email}
+                      onChange={e => setEmail(e.target.value)}
                     />
 
                     <span className="absolute right-4 top-4">
@@ -211,6 +237,9 @@ const SignIn: React.FC = () => {
                       type="password"
                       placeholder="Enter your password"
                       className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                      value={password}
+                      onChange={e => setPassword(e.target.value)}
+
                     />
 
                     <span className="absolute right-4 top-4">
@@ -236,7 +265,7 @@ const SignIn: React.FC = () => {
                     </span>
                   </div>
                 </div>
-
+                <div className=" text-meta-1 text-center pb-2 -pt-2">{message}</div>
                 <div className="mb-5">
                   <input
                     type="submit"

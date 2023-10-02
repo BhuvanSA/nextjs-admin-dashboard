@@ -1,18 +1,40 @@
-import React from "react";
+'use client'
+import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import { Metadata } from "next";
-export const metadata: Metadata = {
-  title: "Signup Page | Next.js E-commerce Dashboard Template",
-  description: "This is Signup page for TailAdmin Next.js",
-  // other metadata
-};
+import { useRouter } from "next/navigation";
 
 const SignUp: React.FC = () => {
+  const router = useRouter();
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
+  const handleSubmit = (e:any) =>  {
+    e.preventDefault();
+    let params = new URLSearchParams();
+    params.append('name', name);
+    params.append('email', email);
+    params.append('password', password);
+    fetch(`http://127.0.0.1:5000/signup`, {
+      method:'POST',
+      body: params,
+      headers: {
+        'Content-Type':'application/x-www-form-urlencoded'
+      }
+    })
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data);
+          router.push("/auth/signin")
+        });
+  }
+
   return (
     <>
-
       <div className="rounded-2xl border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
         <div className="flex flex-wrap items-center">
           <div className="hidden w-full xl:block xl:w-1/2">
@@ -21,13 +43,6 @@ const SignUp: React.FC = () => {
                 <Image
                   className="hidden dark:block"
                   src={"/images/logo/logo.svg"}
-                  alt="Logo"
-                  width={176}
-                  height={32}
-                />
-                <Image
-                  className="dark:hidden"
-                  src={"/images/logo/logo-dark.svg"}
                   alt="Logo"
                   width={176}
                   height={32}
@@ -169,7 +184,7 @@ const SignUp: React.FC = () => {
                 Sign Up to TailAdmin
               </h2>
 
-              <form>
+              <form onSubmit={handleSubmit}>
                 <div className="mb-4">
                   <label className="mb-2.5 block font-medium text-black dark:text-white">
                     Name
@@ -179,6 +194,10 @@ const SignUp: React.FC = () => {
                       type="text"
                       placeholder="Enter your full name"
                       className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                      value={name}
+                      onChange={(e) => {
+                        setName(e.target.value);
+                      }}
                     />
 
                     <span className="absolute right-4 top-4">
@@ -214,6 +233,10 @@ const SignUp: React.FC = () => {
                       type="email"
                       placeholder="Enter your email"
                       className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                      value={email}
+                      onChange={(e) => {
+                        setEmail(e.target.value)
+                      }}
                     />
 
                     <span className="absolute right-4 top-4">
@@ -245,6 +268,10 @@ const SignUp: React.FC = () => {
                       type="password"
                       placeholder="Enter your password"
                       className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                      value={password}
+                      onChange={(e) => {
+                        setPassword(e.target.value)
+                      }}
                     />
 
                     <span className="absolute right-4 top-4">
@@ -280,6 +307,10 @@ const SignUp: React.FC = () => {
                       type="password"
                       placeholder="Re-enter your password"
                       className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                      value={confirmPassword}
+                      onChange={(e) => {
+                        setConfirmPassword(e.target.value);
+                      }}
                     />
 
                     <span className="absolute right-4 top-4">
@@ -311,6 +342,7 @@ const SignUp: React.FC = () => {
                     type="submit"
                     value="Create account"
                     className="w-full cursor-pointer rounded-lg border border-primary bg-primary p-4 text-white transition hover:bg-opacity-90"
+                    onClick={handleSubmit}
                   />
                 </div>
 
