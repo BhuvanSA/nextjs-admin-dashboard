@@ -1,5 +1,6 @@
 import { BRAND } from "@/types/brand";
 import Image from "next/image";
+import Link from "next/link";
 
 // const brandData: BRAND[] = [
 //   {
@@ -107,6 +108,7 @@ const TableOne = (props: any) => {
         </div>
 
         {brandData.map((brand:any, key:any) => (
+          <Link href={`/students/info/${brand.visitors}`} key={key}>
           <div
             className={`grid grid-cols-3 sm:grid-cols-5 ${
               key === brandData.length - 1
@@ -140,6 +142,7 @@ const TableOne = (props: any) => {
               <p className="text-meta-5">{brand.conversion}</p>
             </div>
           </div>
+          </Link>
         ))}
       </div>
     </div>

@@ -24,10 +24,10 @@ function Page({ params }) {
   if (!data) return <p>No profile data</p>;
 
   return (
-    <div className="dark:border-strokedark dark:bg-boxdark ">
-      <div className="p-10 bg-gray-100 min-h-screen dark:bg-meta-4">
+    <div className="dark:border-strokedark dark:bg-boxdark">
+      <div className="rounded-2xl p-10 bg-gray-100 min-h-screen dark:bg-meta-4">
         <Link href="/students">Back</Link>
-        <div className="bg-white shadow rounded p-5">
+        <div className="bg-white shadow p-5 rounded-2xl dark:bg-form-input">
           <Image
             alt="image of student"
             src={`/images/students/${data.department}/${data.id}.jpg`}
@@ -63,7 +63,7 @@ function Page({ params }) {
           twoDataName="Student SGPA"
           graphDataOne={data.deptScores}
           graphDataTwo={data.scores}
-        ></ChartOne>
+        />
       </div>
     </div>
   );

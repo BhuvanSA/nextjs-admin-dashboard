@@ -1,7 +1,10 @@
 "use client";
+import CardDataStats from "@/components/CardDataStats";
 // Import Next.js and React hooks
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import Link from "next/link";
+import Image from "next/image";
 
 // Define a component that renders a search page
 export default function SearchPage(params) {
@@ -14,6 +17,7 @@ export default function SearchPage(params) {
   // Use state hooks to store the search results and the loading status
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
+  console.log(results);
 
   // Use useEffect hook to fetch data from Flask backend when the query changes
   useEffect(() => {
@@ -26,7 +30,7 @@ export default function SearchPage(params) {
         .then((response) => response.json())
         .then((data) => {
           // Set the results state to the data array
-          setResults(data);
+          setResults(data["students"]);
           // Set the loading state to false
           setLoading(false);
         })
@@ -46,10 +50,21 @@ export default function SearchPage(params) {
       {loading && <p>Loading...</p>}
       {results.length > 0 && (
         <ul>
-          {results.map((result) => (
-            <li key={result.id}>
-              {result.name} ({result.usn})
-            </li>
+          {results.map((student) => (
+            <Link href={`/students/info/${student.usn}`} key={student.usn}>
+              <CardDataStats
+                total={student.name} // Assuming 'name' is the student's name
+                title={student.usn} // Assuming 'username' is the student's username
+                rate={student.cgpa} // Assuming 'rate' is the student's rate
+              >
+                <Image
+                  alt="image of student"
+                  src={`/images/students/${student.department}/${student.usn}.jpg`}
+                  width={30}
+                  height={30}
+                />
+              </CardDataStats>
+            </Link>
           ))}
         </ul>
       )}
